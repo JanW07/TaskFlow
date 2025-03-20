@@ -14,11 +14,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class BoardControllerTest extends Integration implements BoardHelper, LoginHelper {
     @Test
-    public void createTaskHappyPath() {
+    public void createBoardHappyPath() {
         String token = getToken("admin", "admin");
         CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
                 .name("Task One")
@@ -53,7 +54,7 @@ public class BoardControllerTest extends Integration implements BoardHelper, Log
 
         List<BoardDTO> boards = getAllBoards(token)
                 .statusCode(HttpStatus.OK.value())
-                .extract().as(new TypeRef<List<BoardDTO>>() {});
+                .extract().jsonPath().getList("", BoardDTO.class);
 
         Assertions.assertTrue(boards.size() >= 2, "Expected at least 2 boards");
     }

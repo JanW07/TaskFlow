@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class BoardDTO {
     private Long id;
     private String name;
