@@ -6,6 +6,29 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <!-- user table -->
+    <changeSet id="users-table-creation" author="Jan">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="user-table-admin-add" author="Jan">
+        <insert tableName="user">
+            <column name="login" value="admin"/>
+            <column name="password" value="$2a$10$ChM3hgNgEt7cONBAg0UEreUTXPMPhopyt27EJEttnvCn/PwO9N5vK"/> <!-- Zahashowane hasło "admin" -->
+        </insert>
+    </changeSet>
+
+
     <!-- task table -->
     <changeSet id="task-table-creation" author="Jan">
         <createTable tableName="task">
@@ -18,4 +41,31 @@
             <column name="description" type="VARCHAR(1024)"/>
         </createTable>
     </changeSet>
+
+    <!-- User task table -->
+    <changeSet id="user-task-join-table-new" author="Jan">
+        <createTable tableName="user_task">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_task" columnNames="user_id, task_id" constraintName="pk_user_task"/>
+        <addForeignKeyConstraint
+                baseTableName="user_task"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_user_task_user"/>
+        <addForeignKeyConstraint
+                baseTableName="user_task"
+                baseColumnNames="task_id"
+                referencedTableName="task"
+                referencedColumnNames="id"
+                constraintName="fk_user_task_task"/>
+    </changeSet>
+
+
 </databaseChangeLog>

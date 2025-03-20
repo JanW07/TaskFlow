@@ -1,5 +1,7 @@
 package com.taskflow.taskflowbackend.service;
 
+import com.taskflow.taskflowbackend.config.exception.ErrorCode;
+import com.taskflow.taskflowbackend.config.exception.TaskFlowException;
 import com.taskflow.taskflowbackend.model.entity.Task;
 import com.taskflow.taskflowbackend.model.mapper.TaskMapper;
 import com.taskflow.taskflowbackend.model.request.CreateTaskDTO;
@@ -29,7 +31,7 @@ public class TaskService {
 
     public TaskDTO getTask(Long id){
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.TASK_NOT_FOUND, id));
         return taskMapper.toDTO(task);
     }
 
@@ -42,7 +44,7 @@ public class TaskService {
 
     public TaskDTO updateTask(Long id, UpdateTaskDTO updateTaskDTO){
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.TASK_NOT_FOUND, id));
         taskMapper.updateTaskFromDTO(updateTaskDTO, task);
 
         Task savedTask = taskRepository.save(task);
@@ -51,7 +53,7 @@ public class TaskService {
 
     public void deleteTask(Long id){
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.TASK_NOT_FOUND, id));
         taskRepository.delete(task);
     }
 

@@ -14,9 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class TaskDTO {
+public class UserDTO {
     private Long id;
-    private String name;
-    private String description;
-    private List<UserDTO> users;
+    private String login;
+    private List<TaskDTO> tasks;
 }
