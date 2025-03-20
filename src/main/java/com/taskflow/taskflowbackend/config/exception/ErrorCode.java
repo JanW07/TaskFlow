@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     INTERNAL(HttpStatus.INTERNAL_SERVER_ERROR, "InternalError"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "UserNotFound"),
-    TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "TaskNotFound");
+    TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "TaskNotFound"),
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BoardNotFound");
 
 
     private final HttpStatus httpStatus;

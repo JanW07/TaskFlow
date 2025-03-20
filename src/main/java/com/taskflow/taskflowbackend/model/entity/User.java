@@ -37,4 +37,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private List<Task> tasks = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "users")
+    private List<Board> boards = new ArrayList<>();
 }

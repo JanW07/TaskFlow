@@ -6,22 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "task")
+@Table(name = "board")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,10 +28,14 @@ public class Task {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "tasks")
-    private List<User> users = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @ManyToMany
+    @JoinTable(
+            name = "board_user",
+            joinColumns = @JoinColumn(name = "board_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users = new ArrayList<>();
 }
