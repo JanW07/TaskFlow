@@ -50,8 +50,8 @@ public class BoardService {
     }
 
     public List<BoardDTO> getAllBoards(String login) {
-        return boardRepository.findAll().stream()
-                .filter(board -> board.getUsers().stream().anyMatch(u -> u.getLogin().equals(login)))
+        List<Board> boards = boardRepository.findByUsersLogin(login);
+        return boards.stream()
                 .map(boardMapper::toDTO)
                 .collect(Collectors.toList());
     }

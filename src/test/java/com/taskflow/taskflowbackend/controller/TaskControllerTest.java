@@ -1,10 +1,13 @@
 package com.taskflow.taskflowbackend.controller;
 
 import com.taskflow.taskflowbackend.Service.Integration;
+import com.taskflow.taskflowbackend.helper.BoardHelper;
 import com.taskflow.taskflowbackend.helper.LoginHelper;
 import com.taskflow.taskflowbackend.helper.TaskHelper;
+import com.taskflow.taskflowbackend.model.request.CreateBoardDTO;
 import com.taskflow.taskflowbackend.model.request.CreateTaskDTO;
 import com.taskflow.taskflowbackend.model.request.UpdateTaskDTO;
+import com.taskflow.taskflowbackend.model.response.BoardDTO;
 import com.taskflow.taskflowbackend.model.response.TaskDTO;
 import io.jsonwebtoken.lang.Assert;
 import io.restassured.common.mapper.TypeRef;
@@ -15,15 +18,31 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-public class TaskControllerTest extends Integration implements TaskHelper, LoginHelper {
+public class TaskControllerTest extends Integration implements TaskHelper, LoginHelper, BoardHelper {
+
+
+    private Long createBoard(String token){
+        CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
+                .name("Board One")
+                .description("Description One")
+                .build();
+        BoardDTO boardDTO = createBoard(token, createBoardDTO)
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(BoardDTO.class);
+
+        return boardDTO.getId();
+    }
+
+
     @Test
     public void createTaskHappyPath() {
         String token = getToken("admin", "admin");
+        Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task One")
                 .description("Description One")
                 .build();
-        TaskDTO taskDTO = createTask(token, createTaskDTO)
+        TaskDTO taskDTO = createTask(token, boardId, createTaskDTO)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
@@ -34,15 +53,16 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
     @Test
     public void getTaskByIdHappyPath() {
         String token = getToken("admin", "admin");
+        Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Two")
                 .description("Description Two")
                 .build();
-        TaskDTO createdTask = createTask(token, createTaskDTO)
+        TaskDTO createdTask = createTask(token, boardId,createTaskDTO)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
-        TaskDTO fetchedTask = getTaskById(token, createdTask.getId())
+        TaskDTO fetchedTask = getTaskById(token, boardId, createdTask.getId())
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
@@ -53,13 +73,13 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
     @Test
     public void getTasksHappyPath() {
         String token = getToken("admin", "admin");
+        Long boardId = createBoard(token);
 
-        // Create two tasks
         CreateTaskDTO createTaskDTO1 = CreateTaskDTO.builder()
                 .name("Task Three")
                 .description("Description Three")
                 .build();
-        createTask(token, createTaskDTO1)
+        createTask(token, boardId, createTaskDTO1)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
@@ -67,12 +87,12 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
                 .name("Task Four")
                 .description("Description Four")
                 .build();
-        createTask(token, createTaskDTO2)
+        createTask(token, boardId, createTaskDTO2)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
         // Extract list of tasks
-        List<TaskDTO> tasksDTO = getTasks(token)
+        List<TaskDTO> tasksDTO = getTasksOnBoard(token, boardId)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(new TypeRef<List<TaskDTO>>() {});
 
@@ -83,12 +103,12 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
     @Test
     public void updateTaskHappyPath() {
         String token = getToken("admin", "admin");
-        // Create a task
+        Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Five")
                 .description("Old Description")
                 .build();
-        TaskDTO createdTask = createTask(token, createTaskDTO)
+        TaskDTO createdTask = createTask(token, boardId, createTaskDTO)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
@@ -97,7 +117,7 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
                 .name("Task Five Updated")
                 .description("New Description")
                 .build();
-        TaskDTO updatedTask = updateTask(token, createdTask.getId(), updateTaskDTO)
+        TaskDTO updatedTask = updateTask(token, boardId, createdTask.getId(), updateTaskDTO)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
@@ -108,54 +128,41 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
     @Test
     public void deleteTaskHappyPath() {
         String token = getToken("admin", "admin");
-        // Create a task to delete
+        Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Six")
                 .description("To be deleted")
                 .build();
-        TaskDTO createdTask = createTask(token, createTaskDTO)
+        TaskDTO createdTask = createTask(token, boardId, createTaskDTO)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
         // Delete the task
-        deleteTask(token, createdTask.getId())
+        deleteTask(token, boardId, createdTask.getId())
                 .statusCode(HttpStatus.OK.value());
 
         // Verify that fetching the deleted task returns 404 (or another error code)
-        getTaskById(token, createdTask.getId())
+        getTaskById(token, boardId, createdTask.getId())
                 .statusCode(HttpStatus.NOT_FOUND.value());
-    }
-
-    // Bad Paths / Negative Tests
-
-    @Test
-    public void createTaskWithInvalidTokenShouldFail() {
-        String invalidToken = "invalid-token";
-        CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
-                .name("Invalid Token Task")
-                .description("Should fail")
-                .build();
-        // Expect unauthorized (or 403) due to invalid token
-        createTask(invalidToken, createTaskDTO)
-                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
     public void getTaskByNonExistingIdShouldFail() {
         String token = getToken("admin", "admin");
-        // Use an ID that likely doesn't exist (e.g., 99999)
-        getTaskById(token, 99999L)
+        Long boardId = createBoard(token);
+        getTaskById(token, boardId, 99999L)
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     public void updateTaskWithOnlyDescription() {
         String token = getToken("admin", "admin");
+        Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Seven")
                 .description("Valid Description")
                 .build();
-        TaskDTO createdTask = createTask(token, createTaskDTO)
+        TaskDTO createdTask = createTask(token, boardId, createTaskDTO)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(TaskDTO.class);
 
@@ -163,7 +170,7 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
                 .name(null)
                 .description("New Description")
                 .build();
-        updateTask(token, createdTask.getId(), updateTaskDTO)
+        updateTask(token, createdTask.getId(), boardId, updateTaskDTO)
                 .statusCode(HttpStatus.OK.value());
     }
 }

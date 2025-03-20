@@ -1,5 +1,6 @@
 package com.taskflow.taskflowbackend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,9 +31,11 @@ public class Task {
     private String description;
 
     @ManyToMany(mappedBy = "tasks")
+    @JsonBackReference(value = "user-tasks")
     private List<User> users = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
+    @JsonBackReference(value = "user-tasks")
     private Board board;
 }

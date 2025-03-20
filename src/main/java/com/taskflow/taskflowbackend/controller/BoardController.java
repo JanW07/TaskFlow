@@ -38,8 +38,8 @@ public class BoardController {
     public ResponseEntity<List<BoardDTO>> getAllBoards() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = authentication.getName();
-        List<BoardDTO> boards = boardService.getAllBoards(login);
-        return ResponseEntity.ok(boards);
+        List<BoardDTO> boardDTOs = boardService.getAllBoards(login);
+        return ResponseEntity.ok(boardDTOs);
     }
 
     @PatchMapping("/{id}")
