@@ -15,8 +15,14 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 )
 
 public interface TaskMapper {
+    @Mapping(target = "users", ignore = true)
     TaskDTO toDTO(Task task);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "users", ignore = true)
     Task toEntity(CreateTaskDTO createTaskDTO);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "users", ignore = true)
     void updateTaskFromDTO(UpdateTaskDTO updateTaskDTO, @MappingTarget Task task);
 }

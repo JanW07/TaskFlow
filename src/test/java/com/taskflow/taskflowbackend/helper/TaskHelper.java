@@ -24,6 +24,6 @@ public interface TaskHelper extends AuthorizedUserTest{
     }
 
     default ValidatableResponse deleteTask(String token, Long id) {
-        return whenAuthenticated(token).get(URL + "/" + id).then();
+        return whenAuthenticated(token).delete(URL + "/" + id).then();
     }
 }

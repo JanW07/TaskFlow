@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateTaskDTO {

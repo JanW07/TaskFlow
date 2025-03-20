@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "task")
 @Getter
@@ -24,4 +27,7 @@ public class Task {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToMany(mappedBy = "tasks")
+    private List<User> users = new ArrayList<>();
 }

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "`user`")
 @Getter
@@ -25,4 +28,13 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_task",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    private List<Task> tasks = new ArrayList<>();
 }
