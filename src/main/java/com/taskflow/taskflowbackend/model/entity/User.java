@@ -8,20 +8,21 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "task")
+@Table(name = "`user`")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class Task {
+@AllArgsConstructor
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "login", unique = true, nullable = false)
+    private String login;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "password")
+    private String password;
 }

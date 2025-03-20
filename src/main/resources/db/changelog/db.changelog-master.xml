@@ -6,6 +6,28 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <!-- user table -->
+    <changeSet id="users-table-creation" author="Jan">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="user-table-admin-add" author="Jan">
+        <insert tableName="user">
+            <column name="login" value="admin"/>
+            <column name="password" value="$2a$10$ChM3hgNgEt7cONBAg0UEreUTXPMPhopyt27EJEttnvCn/PwO9N5vK"/> <!-- Zahashowane hasło "admin" -->
+        </insert>
+    </changeSet>
+
     <!-- task table -->
     <changeSet id="task-table-creation" author="Jan">
         <createTable tableName="task">
