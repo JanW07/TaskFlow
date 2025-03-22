@@ -39,11 +39,13 @@ public class JwtUtil {
 
     // Get all claims present in the token
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 
     // Check if the token is expired
     private Boolean isTokenExpired(String token) {
@@ -66,7 +68,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, getSigningKey())
                 .compact();
     }
 
