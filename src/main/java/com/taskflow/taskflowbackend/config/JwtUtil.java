@@ -3,9 +3,12 @@ package com.taskflow.taskflowbackend.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "my_secret_key"; // Replace with a secure key in production
+    private final String SECRET_KEY = "my_super_secret_key_that_is_at_least_32_chars";
     private final long JWT_TOKEN_VALIDITY = 10 * 60 * 60 * 1000; // 10 hours validity
 
     // Extract username from the token (subject)
@@ -36,11 +39,13 @@ public class JwtUtil {
 
     // Get all claims present in the token
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 
     // Check if the token is expired
     private Boolean isTokenExpired(String token) {
@@ -63,8 +68,12 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, getSigningKey())
                 .compact();
+    }
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
     // Validate the token using the UserDetails
