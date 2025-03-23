@@ -18,6 +18,6 @@ public class TaskDTO {
     private Long id;
     private String name;
     private String description;
-    private List<UserDTO> users;
+    private List<UserMeDTO> users;
     private BoardDTO board;
 }
