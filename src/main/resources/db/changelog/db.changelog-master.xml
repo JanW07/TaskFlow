@@ -28,6 +28,14 @@
         </insert>
     </changeSet>
 
+    <changeSet id="user-table-user-add" author="Jan">
+        <insert tableName="user">
+            <column name="login" value="user"/>
+            <column name="password" value="$2a$12$sKvUijomriXeFAwBty7NgulfXTfYVn7aLPkLZSP8Q83bYcqwpde8O"/> <!-- Zahashowane hasło "admin" -->
+        </insert>
+    </changeSet>
+
+
     <changeSet id="user-table-add-first-last-name" author="Jan">
         <addColumn tableName="user">
             <column name="first_name" type="VARCHAR(255)" defaultValue="first_name">
