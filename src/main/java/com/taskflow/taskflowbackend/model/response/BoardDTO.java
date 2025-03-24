@@ -19,5 +19,5 @@ public class BoardDTO {
     private String name;
     private String description;
     private List<TaskDTO> tasks;
-    private List<UserDTO> users;
+    private List<UserMeDTO> users;
 }

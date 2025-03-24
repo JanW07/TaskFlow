@@ -1,7 +1,5 @@
 package com.taskflow.taskflowbackend.model.response;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class UserDTO {
+public class UserMeDTO {
     private Long id;
     private String login;
+    private String firstName;
+    private String lastName;
     private List<TaskDTO> tasks;
+    private List<BoardDTO> boards;
 }

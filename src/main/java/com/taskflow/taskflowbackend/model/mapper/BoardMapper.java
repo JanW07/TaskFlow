@@ -15,6 +15,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface BoardMapper {
 
     @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "users", ignore = true)
     BoardDTO toDTO(Board board);
 
     Board toEntity(CreateBoardDTO createBoardDTO);

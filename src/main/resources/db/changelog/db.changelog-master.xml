@@ -28,6 +28,18 @@
         </insert>
     </changeSet>
 
+    <changeSet id="user-table-add-first-last-name" author="Jan">
+        <addColumn tableName="user">
+            <column name="first_name" type="VARCHAR(255)" defaultValue="first_name">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)" defaultValue="last_name">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
 
     <!-- task table -->
     <changeSet id="task-table-creation" author="Jan">
