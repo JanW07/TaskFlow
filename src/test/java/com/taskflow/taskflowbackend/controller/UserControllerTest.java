@@ -16,12 +16,12 @@ import java.util.List;
 public class UserControllerTest extends Integration implements UserHelper, LoginHelper {
     @Test
     public void getUserDTOMeHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
         UserMeDTO userMeDTO = getUserMe(token)
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(UserMeDTO.class);
 
-        Assertions.assertEquals(userMeDTO.getFirstName(), "first_name");
-        Assertions.assertEquals(userMeDTO.getLastName(), "last_name");
+        Assertions.assertEquals(userMeDTO.getFirstName(), "admin");
+        Assertions.assertEquals(userMeDTO.getLastName(), "admin");
     }
 }

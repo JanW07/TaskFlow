@@ -39,27 +39,27 @@ public class BoardService {
         return boardMapper.toDTO(updatedBoard);
     }
 
-    public BoardDTO getBoardById(Long id, String login) {
+    public BoardDTO getBoardById(Long id, String email) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, id));
-        boolean allowed = board.getUsers().stream().anyMatch(u -> u.getLogin().equals(login));
+        boolean allowed = board.getUsers().stream().anyMatch(u -> u.getEmail().equals(email));
         if (!allowed) {
             throw new TaskFlowException(ErrorCode.USER_NOT_FOUND, id);
         }
         return boardMapper.toDTO(board);
     }
 
-    public List<BoardDTO> getAllBoards(String login) {
-        List<Board> boards = boardRepository.findByUsersLogin(login);
+    public List<BoardDTO> getAllBoards(String email) {
+        List<Board> boards = boardRepository.findByUsersEmail(email);
         return boards.stream()
                 .map(boardMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public BoardDTO updateBoard(Long id, UpdateBoardDTO updateBoardDTO, String login) {
+    public BoardDTO updateBoard(Long id, UpdateBoardDTO updateBoardDTO, String email) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, id));
-        boolean allowed = board.getUsers().stream().anyMatch(u -> u.getLogin().equals(login));
+        boolean allowed = board.getUsers().stream().anyMatch(u -> u.getEmail().equals(email));
         if (!allowed) {
             throw new TaskFlowException(ErrorCode.USER_NOT_FOUND, id);
         }
@@ -71,7 +71,7 @@ public class BoardService {
     public void deleteBoard(Long id, String login) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, id));
-        boolean allowed = board.getUsers().stream().anyMatch(u -> u.getLogin().equals(login));
+        boolean allowed = board.getUsers().stream().anyMatch(u -> u.getEmail().equals(login));
         if (!allowed) {
             throw new TaskFlowException(ErrorCode.USER_NOT_FOUND, id);
         }

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserMeDTO {
     private Long id;
-    private String login;
+    private String email;
     private String firstName;
     private String lastName;
     private List<TaskDTO> tasks;

@@ -26,9 +26,9 @@ public class TaskService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public TaskDTO createTask(CreateTaskDTO createTaskDTO, Long boardId, String login){
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+    public TaskDTO createTask(CreateTaskDTO createTaskDTO, Long boardId, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
@@ -48,9 +48,9 @@ public class TaskService {
         return taskMapper.toDTO(savedTask);
     }
 
-    public TaskDTO getTaskById(Long id, String login){
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+    public TaskDTO getTaskById(Long id, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
 
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.TASK_NOT_FOUND, id));
@@ -62,9 +62,9 @@ public class TaskService {
         return taskMapper.toDTO(task);
     }
 
-    public List<TaskDTO> getTasksOnBoard(Long boardId, String login){
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+    public List<TaskDTO> getTasksOnBoard(Long boardId, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
@@ -78,9 +78,9 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    public TaskDTO updateTask(Long id, Long boardId, String login, UpdateTaskDTO updateTaskDTO){
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+    public TaskDTO updateTask(Long id, Long boardId, String email, UpdateTaskDTO updateTaskDTO){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
@@ -100,9 +100,9 @@ public class TaskService {
         return taskMapper.toDTO(savedTask);
     }
 
-    public void deleteTask(Long id, Long boardId, String login){
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+    public void deleteTask(Long id, Long boardId, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));

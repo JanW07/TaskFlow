@@ -3,6 +3,7 @@ package com.taskflow.taskflowbackend.model.mapper;
 import com.taskflow.taskflowbackend.model.entity.User;
 import com.taskflow.taskflowbackend.model.response.UserMeDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(

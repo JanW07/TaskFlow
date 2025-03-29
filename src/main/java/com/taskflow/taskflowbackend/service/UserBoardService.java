@@ -15,11 +15,11 @@ public class UserBoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public void assignUser(Long boardId, String login) {
+    public void assignUser(Long boardId, String email) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
 
         if (!board.getUsers().contains(user)) {
             board.getUsers().add(user);

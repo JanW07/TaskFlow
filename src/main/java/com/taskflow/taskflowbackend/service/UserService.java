@@ -17,9 +17,9 @@ public class UserService {
     private final UserMapper userMapper;
 
 
-    public UserMeDTO getUserMe(String login) {
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, login));
+    public UserMeDTO getUserMe(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
         return userMapper.toUserMeDTO(user);
     }
 }
