@@ -12,7 +12,7 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="login" type="VARCHAR(255)">
+            <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="password" type="VARCHAR(255)">
@@ -20,21 +20,6 @@
             </column>
         </createTable>
     </changeSet>
-
-    <changeSet id="user-table-admin-add" author="Jan">
-        <insert tableName="user">
-            <column name="login" value="admin"/>
-            <column name="password" value="$2a$10$ChM3hgNgEt7cONBAg0UEreUTXPMPhopyt27EJEttnvCn/PwO9N5vK"/> <!-- Zahashowane hasło "admin" -->
-        </insert>
-    </changeSet>
-
-    <changeSet id="user-table-user-add" author="Jan">
-        <insert tableName="user">
-            <column name="login" value="user"/>
-            <column name="password" value="$2a$12$sKvUijomriXeFAwBty7NgulfXTfYVn7aLPkLZSP8Q83bYcqwpde8O"/> <!-- Zahashowane hasło "admin" -->
-        </insert>
-    </changeSet>
-
 
     <changeSet id="user-table-add-first-last-name" author="Jan">
         <addColumn tableName="user">
@@ -46,6 +31,27 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="user-table-admin-add" author="Jan">
+        <insert tableName="user">
+            <column name="email" value="admin@admin.com"/>
+            <column name="password" value="$2a$10$ChM3hgNgEt7cONBAg0UEreUTXPMPhopyt27EJEttnvCn/PwO9N5vK"/> <!-- Zahashowane hasło "admin" -->
+            <column name="first_name" value="admin"/>
+            <column name="last_name" value="admin"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="user-table-user-add" author="Jan">
+        <insert tableName="user">
+            <column name="email" value="user@user.com"/>
+            <column name="password" value="$2a$12$sKvUijomriXeFAwBty7NgulfXTfYVn7aLPkLZSP8Q83bYcqwpde8O"/> <!-- Zahashowane user "admin" -->
+            <column name="first_name" value="user"/>
+            <column name="last_name" value="user"/>
+        </insert>
+    </changeSet>
+
+
+
 
 
 

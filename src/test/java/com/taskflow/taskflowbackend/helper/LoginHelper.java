@@ -7,9 +7,9 @@ import com.taskflow.taskflowbackend.model.response.LoginResponseDTO;
 public interface LoginHelper extends AuthorizedUserTest {
     String LOGIN_URL = "/auth/login";
 
-    default String getToken(String login, String password) {
+    default String getToken(String email, String password) {
         AuthenticationRequest request = AuthenticationRequest.builder()
-                .login(login)
+                .email(email)
                 .password(password)
                 .build();
         LoginResponseDTO response = whenAnonymousWithBody(request)

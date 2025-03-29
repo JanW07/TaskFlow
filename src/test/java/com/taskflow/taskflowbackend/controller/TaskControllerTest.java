@@ -20,7 +20,6 @@ import java.util.List;
 
 public class TaskControllerTest extends Integration implements TaskHelper, LoginHelper, BoardHelper {
 
-
     private Long createBoard(String token){
         CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
                 .name("Board One")
@@ -36,7 +35,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void createTaskHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task One")
@@ -52,7 +52,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void getTaskByIdHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Two")
@@ -72,7 +73,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void getTasksHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
 
         CreateTaskDTO createTaskDTO1 = CreateTaskDTO.builder()
@@ -102,7 +104,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void updateTaskHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Five")
@@ -127,7 +130,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void deleteTaskHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Six")
@@ -148,7 +152,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void getTaskByNonExistingIdShouldFail() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
         getTaskById(token, boardId, 99999L)
                 .statusCode(HttpStatus.NOT_FOUND.value());
@@ -156,7 +161,8 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
 
     @Test
     public void updateTaskWithOnlyDescription() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         Long boardId = createBoard(token);
         CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
                 .name("Task Seven")

@@ -2,6 +2,7 @@ package com.taskflow.taskflowbackend.controller;
 
 import com.taskflow.taskflowbackend.config.JwtUtil;
 import com.taskflow.taskflowbackend.config.UserDetailService;
+import com.taskflow.taskflowbackend.model.request.AuthenticationRequest;
 import com.taskflow.taskflowbackend.model.response.LoginResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,22 +24,15 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> createAuthenticationToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<LoginResponseDTO> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
         );
 
-        final UserDetails userDetails = userDetailService.loadUserByUsername(authRequest.getLogin());
+        final UserDetails userDetails = userDetailService.loadUserByUsername(authenticationRequest.getEmail());
 
         final String token = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(LoginResponseDTO.builder().token(token).build());
-    }
-
-    // Request DTO for login
-    @Data
-    public static class AuthRequest {
-        private String login;
-        private String password;
     }
 }

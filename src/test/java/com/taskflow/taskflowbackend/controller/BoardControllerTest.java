@@ -18,9 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BoardControllerTest extends Integration implements BoardHelper, LoginHelper {
+
     @Test
     public void createBoardHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
+
         CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
                 .name("Task One")
                 .description("Description One")
@@ -34,7 +36,7 @@ public class BoardControllerTest extends Integration implements BoardHelper, Log
     }
     @Test
     public void getAllBoardsHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
 
         CreateBoardDTO board1 = CreateBoardDTO.builder()
                 .name("Board A")
@@ -61,7 +63,7 @@ public class BoardControllerTest extends Integration implements BoardHelper, Log
 
     @Test
     public void getBoardByIdHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
 
         CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
                 .name("Board To Retrieve")
@@ -81,7 +83,7 @@ public class BoardControllerTest extends Integration implements BoardHelper, Log
 
     @Test
     public void updateBoardHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
 
         CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
                 .name("Board To Update")
@@ -105,7 +107,7 @@ public class BoardControllerTest extends Integration implements BoardHelper, Log
 
     @Test
     public void deleteBoardHappyPath() {
-        String token = getToken("admin", "admin");
+        String token = getToken("admin@admin.com", "admin");
 
         CreateBoardDTO createBoardDTO = CreateBoardDTO.builder()
                 .name("Board To Delete")
