@@ -23,6 +23,15 @@ public interface TaskHelper extends AuthorizedUserTest{
         return whenAuthenticatedWithBody(updateTaskDTO, token).patch(URL + "/" + boardId + "/task/" + id).then();
     }
 
+    default ValidatableResponse completeTask(String token, Long boardId, Long id) {
+        return whenAuthenticated(token).patch(URL + "/" + boardId + "/task/complete/" + id).then();
+    }
+
+    default ValidatableResponse undo_completeTask(String token, Long boardId, Long id) {
+        return whenAuthenticated(token).patch(URL + "/" + boardId + "/task/undo-complete/" + id).then();
+    }
+
+
     default ValidatableResponse deleteTask(String token, Long boardId, Long id) {
         return whenAuthenticated(token).delete(URL + "/" + boardId + "/task/" + id).then();
     }

@@ -3,6 +3,7 @@ package com.taskflow.taskflowbackend.model.response;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taskflow.taskflowbackend.model.entity.Board;
+import com.taskflow.taskflowbackend.model.entity.BoardStage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,6 @@ public class TaskDTO {
     private String description;
     private List<UserMeDTO> users;
     private BoardDTO board;
+    private boolean isCompleted;
+    private BoardStageDTO boardStage;
 }

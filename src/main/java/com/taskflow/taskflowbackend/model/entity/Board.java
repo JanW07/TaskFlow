@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import java.lang.reflect.Type;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,4 +44,7 @@ public class Board {
     )
     @JsonManagedReference(value = "board-users")
     private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardStage> boardStages;
 }

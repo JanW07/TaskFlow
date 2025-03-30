@@ -68,6 +68,18 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="task-table-adjustments" author="Jan">
+        <addColumn tableName="task">
+            <column name="completed" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stage_number" type="INTEGER" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
     <!-- User task table -->
     <changeSet id="user-task-join-table-new" author="Jan">
         <createTable tableName="user_task">
@@ -140,6 +152,31 @@
                                  referencedColumnNames="id"
                                  constraintName="fk_task_board"/>
     </changeSet>
+
+    <!-- Board Stage table -->
+    <changeSet id="board-stage-table-creation" author="Jan">
+        <createTable tableName="board_stage">
+            <!-- Composite Primary Key: board_id and stage_number -->
+            <column name="board_id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stage_number" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="board_stage"
+                baseColumnNames="board_id"
+                constraintName="fk_board_stage_board"
+                referencedTableName="board"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+
 
 
 
