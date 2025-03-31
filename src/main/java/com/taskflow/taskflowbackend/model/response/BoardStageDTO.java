@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardStageDTO {
     private Long id;
+    private Long stageNumber;
     private String name;
     private BoardDTO board;
     private List<TaskDTO> tasks;
