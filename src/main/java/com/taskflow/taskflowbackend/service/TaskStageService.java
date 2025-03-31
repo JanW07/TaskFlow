@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,21 @@ public class TaskStageService {
 
         Task savedTask = taskRepository.save(task);
         return taskMapper.toDTO(savedTask);
+    }
+
+    public List<TaskDTO> getTasksOnStage(Long boardId, Long stageNumber, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
+
+        if(!board.getUsers().contains(user)){
+            throw new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId);
+        }
+
+        List<Task> tasks = taskRepository.findByBoardStage_Id_BoardIdAndBoardStage_Id_StageNumber(boardId, stageNumber);
+        return tasks.stream().map(taskMapper::toDTO).collect(Collectors.toList());
     }
 
 }
