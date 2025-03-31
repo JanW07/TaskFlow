@@ -129,6 +129,34 @@ public class TaskControllerTest extends Integration implements TaskHelper, Login
     }
 
     @Test
+    public void completeAndUndoTaskHappyPath() {
+        String token = getToken("admin@admin.com", "admin");
+
+        Long boardId = createBoard(token);
+        CreateTaskDTO createTaskDTO = CreateTaskDTO.builder()
+                .name("Task Five")
+                .description("Old Description")
+                .build();
+        TaskDTO createdTask = createTask(token, boardId, createTaskDTO)
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(TaskDTO.class);
+
+        // Complete the task
+        TaskDTO taskDTO = completeTask(token, boardId, createdTask.getId())
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(TaskDTO.class);
+
+        Assertions.assertTrue(taskDTO.isCompleted());
+
+        TaskDTO taskDTO1 = undo_completeTask(token, boardId, createdTask.getId())
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(TaskDTO.class);
+
+        Assertions.assertFalse(taskDTO1.isCompleted());
+    }
+
+
+    @Test
     public void deleteTaskHappyPath() {
         String token = getToken("admin@admin.com", "admin");
 

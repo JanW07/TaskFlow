@@ -52,6 +52,21 @@ public class TaskController {
         return ResponseEntity.ok(taskDTO);
     }
 
+    @PatchMapping("/complete/{id}")
+    public ResponseEntity<TaskDTO> completeTask(@PathVariable Long id, @PathVariable Long boardId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+        TaskDTO taskDTO = taskService.completeTask(id, boardId, login);
+        return ResponseEntity.ok(taskDTO);
+    }
+    @PatchMapping("/undo-complete/{id}")
+    public ResponseEntity<TaskDTO> undo_completeTask(@PathVariable Long id, @PathVariable Long boardId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+        TaskDTO taskDTO = taskService.undo_completeTask(id, boardId, login);
+        return ResponseEntity.ok(taskDTO);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id, @PathVariable Long boardId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

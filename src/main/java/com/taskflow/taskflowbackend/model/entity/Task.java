@@ -22,7 +22,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -35,7 +35,17 @@ public class Task {
     private List<User> users = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id", insertable = false, updatable = false)
     @JsonBackReference(value = "user-tasks")
     private Board board;
+
+    @Column(name = "completed")
+    private boolean isCompleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "board_id", referencedColumnName = "board_id"),
+            @JoinColumn(name = "stage_number", referencedColumnName = "stage_number")
+    })
+    private BoardStage boardStage;
 }

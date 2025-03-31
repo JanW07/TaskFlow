@@ -3,6 +3,7 @@ package com.taskflow.taskflowbackend.service;
 import com.taskflow.taskflowbackend.config.exception.ErrorCode;
 import com.taskflow.taskflowbackend.config.exception.TaskFlowException;
 import com.taskflow.taskflowbackend.model.entity.Board;
+import com.taskflow.taskflowbackend.model.entity.BoardStage;
 import com.taskflow.taskflowbackend.model.entity.Task;
 import com.taskflow.taskflowbackend.model.entity.User;
 import com.taskflow.taskflowbackend.model.mapper.TaskMapper;
@@ -37,10 +38,17 @@ public class TaskService {
             throw new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId);
         }
 
+        BoardStage defaultStage = board.getBoardStages().stream()
+                .filter(stage -> stage.getId().getStageNumber().equals(1L))
+                .findFirst()
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_STAGE_NOT_FOUND, boardId));
+
         Task task = new Task();
         task.setName(createTaskDTO.getName());
         task.setDescription(createTaskDTO.getDescription());
         task.setBoard(board);
+        task.setCompleted(false);
+        task.setBoardStage(defaultStage);
 
         board.getTasks().add(task);
 
@@ -97,6 +105,48 @@ public class TaskService {
         taskMapper.updateTaskFromDTO(updateTaskDTO, task);
 
         Task savedTask = taskRepository.save(task);
+        return taskMapper.toDTO(savedTask);
+    }
+
+    public TaskDTO completeTask(Long id, Long boardId, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
+
+        if(!board.getUsers().contains(user)){
+            throw new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId);
+        }
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.TASK_NOT_FOUND, id));
+        if(!board.getTasks().contains(task)){
+            throw new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId);
+        }
+        task.setCompleted(true);
+        Task savedTask = taskRepository.save(task);
+
+        return taskMapper.toDTO(savedTask);
+    }
+
+    public TaskDTO undo_completeTask(Long id, Long boardId, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.USER_NOT_FOUND, email));
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId));
+
+        if(!board.getUsers().contains(user)){
+            throw new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId);
+        }
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskFlowException(ErrorCode.TASK_NOT_FOUND, id));
+        if(!board.getTasks().contains(task)){
+            throw new TaskFlowException(ErrorCode.BOARD_NOT_FOUND, boardId);
+        }
+        task.setCompleted(false);
+        Task savedTask = taskRepository.save(task);
+
         return taskMapper.toDTO(savedTask);
     }
 

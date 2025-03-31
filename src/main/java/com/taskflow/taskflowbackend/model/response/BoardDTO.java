@@ -1,5 +1,6 @@
 package com.taskflow.taskflowbackend.model.response;
 
+import com.taskflow.taskflowbackend.model.entity.BoardStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,5 @@ public class BoardDTO {
     private String description;
     private List<TaskDTO> tasks;
     private List<UserMeDTO> users;
+    private List<BoardStageDTO> boardStages;
 }
