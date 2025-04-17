@@ -85,6 +85,11 @@ public class TaskStageControllerTest extends Integration implements TaskHelper, 
 
         Assertions.assertNotNull(taskDTOS);
         Assertions.assertTrue(taskDTOS.size()>=2);
+
+        for (TaskDTO taskDTO : taskDTOS) {
+            Assertions.assertNotNull(taskDTO.getBoard());
+            Assertions.assertEquals(boardId, taskDTO.getBoard().getId());
+        }
     }
 
 
