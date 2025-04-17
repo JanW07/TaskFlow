@@ -15,16 +15,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/board/{boardId}/change-stage")
+@RequestMapping("/board/{boardId}")
 @RequiredArgsConstructor
 public class TaskStageController {
     private final TaskStageService taskStageService;
 
-    @PatchMapping("/{stageNumber}/task/{taskId}")
+    @PatchMapping("/task-stage/{stageNumber}/task/{taskId}")
     public ResponseEntity<TaskDTO> changeTaskStage(@PathVariable Long boardId, @PathVariable Long taskId, @PathVariable Long stageNumber){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         TaskDTO taskDTO = taskStageService.changeTaskStage(boardId, taskId, stageNumber, email);
         return ResponseEntity.ok(taskDTO);
     }
+
+    @GetMapping("/task-stage/{stageNumber}")
+    public ResponseEntity<List<TaskDTO>> getTasksOnStage(@PathVariable Long boardId, @PathVariable Long stageNumber){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        List<TaskDTO> taskDTOs = taskStageService.getTasksOnStage(boardId, stageNumber, email);
+        return ResponseEntity.ok(taskDTOs);
+    }
+
+
+
 }

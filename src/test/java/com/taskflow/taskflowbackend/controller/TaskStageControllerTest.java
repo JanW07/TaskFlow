@@ -2,6 +2,7 @@ package com.taskflow.taskflowbackend.controller;
 
 import com.taskflow.taskflowbackend.Service.Integration;
 import com.taskflow.taskflowbackend.helper.*;
+import com.taskflow.taskflowbackend.model.entity.Task;
 import com.taskflow.taskflowbackend.model.request.CreateBoardDTO;
 import com.taskflow.taskflowbackend.model.request.CreateTaskDTO;
 import com.taskflow.taskflowbackend.model.request.UpdateTaskDTO;
@@ -56,4 +57,40 @@ public class TaskStageControllerTest extends Integration implements TaskHelper, 
                 .extract().as(TaskDTO.class);
         Assertions.assertEquals(taskDTO.getBoardStage().getStageNumber(), boardStageDTO.getStageNumber());
     }
+
+    @Test
+    public void getTasksOnStageHappyPath() {
+        String token = getToken("admin@admin.com", "admin");
+
+        Long boardId = createBoard(token);
+        Long taskId1 = createTask(token, boardId);
+        Long taskId2 = createTask(token, boardId);
+
+        BoardStageDTO boardStageDTO = createStage(token, boardId, "Stage1")
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(BoardStageDTO.class);
+
+        changeTaskStage(token, boardId, taskId1, boardStageDTO.getStageNumber())
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(TaskDTO.class);
+        changeTaskStage(token, boardId, taskId2, boardStageDTO.getStageNumber())
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(TaskDTO.class);
+
+        List<TaskDTO> taskDTOS = getTasksOnStage(token, boardId, boardStageDTO.getStageNumber())
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(new TypeRef<List<TaskDTO>>() {
+                });
+
+
+        Assertions.assertNotNull(taskDTOS);
+        Assertions.assertTrue(taskDTOS.size()>=2);
+
+        for (TaskDTO taskDTO : taskDTOS) {
+            Assertions.assertNotNull(taskDTO.getBoard());
+            Assertions.assertEquals(boardId, taskDTO.getBoard().getId());
+        }
+    }
+
+
 }
